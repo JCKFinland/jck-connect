@@ -4,20 +4,23 @@ import (
 	"go.uber.org/zap"
 )
 
+// Logger wraps the Zap logger.
 type Logger struct {
 	*zap.Logger
 }
 
+// New creates a new logger instance.
 func New(environment string) (*Logger, error) {
 	var (
-		log *zap.Logger
-		err error
+		zapLogger *zap.Logger
+		err       error
 	)
 
-	if environment == "production" {
-		log, err = zap.NewProduction()
-	} else {
-		log, err = zap.NewDevelopment()
+	switch environment {
+	case "production":
+		zapLogger, err = zap.NewProduction()
+	default:
+		zapLogger, err = zap.NewDevelopment()
 	}
 
 	if err != nil {
@@ -25,6 +28,15 @@ func New(environment string) (*Logger, error) {
 	}
 
 	return &Logger{
-		Logger: log,
+		Logger: zapLogger,
 	}, nil
+}
+
+// Sync flushes any buffered log entries.
+func (l *Logger) Sync() error {
+	if l == nil || l.Logger == nil {
+		return nil
+	}
+
+	return l.Logger.Sync()
 }
