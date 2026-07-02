@@ -1,34 +1,31 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
+	"net/http"
 
-	"github.com/JCKFinland/jck-connect/backend/internal/middleware"
-	"github.com/JCKFinland/jck-connect/backend/internal/shared"
+	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter() *gin.Engine {
+func New() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
+
 	r := gin.New()
 
+	// Recovery middleware only for now
 	r.Use(gin.Recovery())
-	r.Use(middleware.CORS())
-	r.Use(middleware.SecurityHeaders())
-	r.Use(middleware.RequestID())
-	r.Use(middleware.Logger())
 
-	// Health check
+	// Health endpoint
 	r.GET("/health", func(c *gin.Context) {
-		shared.Success(c, "service is healthy", nil)
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "ok",
+			"service": "jck-connect",
+		})
 	})
 
-	// API v1 group
-	v1 := r.Group("/api/v1")
-
-	auth := v1.Group("/auth")
+	// API v1
+	api := r.Group("/api/v1")
 	{
-		auth.GET("/ping", func(c *gin.Context) {
-			shared.Success(c, "auth module ready", nil)
-		})
+		_ = api
 	}
 
 	return r

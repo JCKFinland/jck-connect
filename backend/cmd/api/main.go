@@ -9,10 +9,10 @@ import (
 func main() {
 	application, err := app.New()
 	if err != nil {
-		log.Fatal("failed to start application:", err)
+		log.Fatalf("failed to initialize application: %v", err)
 	}
 
-	_ = application
-
-	log.Println("jck-connect backend started successfully")
+	if err := application.Run(); err != nil {
+		log.Fatalf("application stopped with error: %v", err)
+	}
 }

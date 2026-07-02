@@ -7,11 +7,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Config stores all application configuration.
 type Config struct {
+	// Application
 	AppName string
 	AppEnv  string
 	AppPort string
 
+	// Database
 	DBHost     string
 	DBPort     string
 	DBUser     string
@@ -20,8 +23,10 @@ type Config struct {
 	DBSSLMode  string
 }
 
+// Load loads configuration from environment variables.
+// It automatically loads a .env file if one exists.
 func Load() *Config {
-	// Load .env if it exists (development)
+	// Ignore error if .env does not exist.
 	_ = godotenv.Load()
 
 	cfg := &Config{
@@ -37,14 +42,17 @@ func Load() *Config {
 		DBSSLMode:  getEnv("DB_SSLMODE", "disable"),
 	}
 
-	log.Printf("Configuration loaded (%s)", cfg.AppEnv)
+	log.Printf(
+		"Configuration loaded (env=%s, port=%s)",
+		cfg.AppEnv,
+		cfg.AppPort,
+	)
 
 	return cfg
 }
 
 func getEnv(key, fallback string) string {
 	value := os.Getenv(key)
-
 	if value == "" {
 		return fallback
 	}
