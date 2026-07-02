@@ -6,13 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func New() *gin.Engine {
-	// Development mode for v0.1.0
-	gin.SetMode(gin.DebugMode)
+// New creates and configures the Gin router.
+func New(appEnv string) *gin.Engine {
+	// Configure Gin mode
+	if appEnv == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
 
 	router := gin.New()
 
-	// Prevent server crashes from panics
+	// Global middleware
 	router.Use(gin.Recovery())
 
 	// Root endpoint
@@ -32,15 +37,14 @@ func New() *gin.Engine {
 		})
 	})
 
-	// API Version 1
-	v1 := router.Group("/api/v1")
+	// API v1
+	api := router.Group("/api/v1")
 	{
-		// Future routes:
-		// /auth
-		// /users
-		// /transactions
-		// /payments
-		// /vtpass
+		api.GET("/ping", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{
+				"message": "API v1 is running",
+			})
+		})
 	}
 
 	return router

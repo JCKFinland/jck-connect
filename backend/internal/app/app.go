@@ -1,8 +1,11 @@
 package app
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/JCKFinland/jck-connect/backend/internal/config"
 	"github.com/JCKFinland/jck-connect/backend/internal/router"
@@ -17,6 +20,7 @@ type App struct {
 	Server *http.Server
 }
 
+// New initializes the application.
 func New() (*App, error) {
 	// Load configuration
 	cfg := config.Load()
@@ -27,19 +31,29 @@ func New() (*App, error) {
 		return nil, fmt.Errorf("initialize logger: %w", err)
 	}
 
+	log.Info("configuration loaded")
+
 	// Connect database
 	db, err := database.New(cfg)
 	if err != nil {
 		log.Error("database connection failed")
+		_ = log.Sync()
 		return nil, fmt.Errorf("connect database: %w", err)
 	}
 
-	// Build router
-	r := router.New()
+	log.Info("database connected")
 
+	// Initialize router
+	r := router.New(cfg.AppEnv)
+
+	// Configure HTTP server
 	server := &http.Server{
-		Addr:    ":" + cfg.AppPort,
-		Handler: r,
+		Addr:              ":" + cfg.AppPort,
+		Handler:           r,
+		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 
 	return &App{
@@ -50,20 +64,33 @@ func New() (*App, error) {
 	}, nil
 }
 
+// Run starts the HTTP server.
 func (a *App) Run() error {
-	a.Logger.Info("Starting jck-connect server",
-		logger.String("port", a.Config.AppPort),
-	)
+	a.Logger.Info("starting HTTP server")
 
-	return a.Server.ListenAndServe()
+	if err := a.Server.ListenAndServe(); err != nil &&
+		!errors.Is(err, http.ErrServerClosed) {
+		return err
+	}
+
+	return nil
 }
 
-func (a *App) Shutdown() error {
-	a.Logger.Info("Shutting down application")
+// Shutdown gracefully shuts down the application.
+func (a *App) Shutdown(ctx context.Context) error {
+	a.Logger.Info("shutting down application")
+
+	if err := a.Server.Shutdown(ctx); err != nil {
+		return err
+	}
 
 	if a.DB != nil {
 		a.DB.Close()
 	}
 
-	return a.Logger.Sync()
+	if a.Logger != nil {
+		_ = a.Logger.Sync()
+	}
+
+	return nil
 }
