@@ -7,26 +7,41 @@ import (
 )
 
 func New() *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
+	// Development mode for v0.1.0
+	gin.SetMode(gin.DebugMode)
 
-	r := gin.New()
+	router := gin.New()
 
-	// Recovery middleware only for now
-	r.Use(gin.Recovery())
+	// Prevent server crashes from panics
+	router.Use(gin.Recovery())
 
-	// Health endpoint
-	r.GET("/health", func(c *gin.Context) {
+	// Root endpoint
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"application": "jck-connect",
+			"version":     "v0.1.0",
+			"status":      "running",
+		})
+	})
+
+	// Health check
+	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  "ok",
 			"service": "jck-connect",
 		})
 	})
 
-	// API v1
-	api := r.Group("/api/v1")
+	// API Version 1
+	v1 := router.Group("/api/v1")
 	{
-		_ = api
+		// Future routes:
+		// /auth
+		// /users
+		// /transactions
+		// /payments
+		// /vtpass
 	}
 
-	return r
+	return router
 }
