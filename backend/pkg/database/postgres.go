@@ -14,6 +14,7 @@ type Database struct {
 	Pool *pgxpool.Pool
 }
 
+// New creates a PostgreSQL connection pool.
 func New(cfg *config.Config) (*Database, error) {
 	dsn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
@@ -30,12 +31,12 @@ func New(cfg *config.Config) (*Database, error) {
 
 	pool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("create connection pool: %w", err)
 	}
 
 	if err := pool.Ping(ctx); err != nil {
 		pool.Close()
-		return nil, err
+		return nil, fmt.Errorf("ping database: %w", err)
 	}
 
 	return &Database{
@@ -43,8 +44,11 @@ func New(cfg *config.Config) (*Database, error) {
 	}, nil
 }
 
+// Close gracefully closes the PostgreSQL connection pool.
 func (db *Database) Close() {
-	if db != nil && db.Pool != nil {
-		db.Pool.Close()
+	if db == nil || db.Pool == nil {
+		return
 	}
+
+	db.Pool.Close()
 }
