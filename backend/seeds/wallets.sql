@@ -1,0 +1,2 @@
+-- Reserved for future development.
+-- Test wallets will be seeded here.

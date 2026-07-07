@@ -4,48 +4,128 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/JCKFinland/jck-connect/backend/internal/config"
+
+	auth "github.com/JCKFinland/jck-connect/backend/internal/domain/auth"
+	authhandler "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/handler"
+	authservice "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/service"
+
+	user "github.com/JCKFinland/jck-connect/backend/internal/domain/user"
+	userhandler "github.com/JCKFinland/jck-connect/backend/internal/domain/user/handler"
+	userpostgres "github.com/JCKFinland/jck-connect/backend/internal/domain/user/repository/postgres"
+	userservice "github.com/JCKFinland/jck-connect/backend/internal/domain/user/service"
+
+	"github.com/JCKFinland/jck-connect/backend/internal/middleware"
+
+	"github.com/JCKFinland/jck-connect/backend/pkg/database"
+	jwtpkg "github.com/JCKFinland/jck-connect/backend/pkg/jwt"
+
+	wallet "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet"
+
+wallethandler "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/handler"
+
+walletpostgres "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/repository/postgres"
+
+walletservice "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/service"
 )
 
-// New creates and configures the Gin router.
-func New(appEnv string) *gin.Engine {
-	// Configure Gin mode
-	if appEnv == "production" {
-		gin.SetMode(gin.ReleaseMode)
-	} else {
-		gin.SetMode(gin.DebugMode)
-	}
+// Register registers all application routes.
+func Register(
+	engine *gin.Engine,
+	cfg *config.Config,
+	db *database.Database,
+) {
 
-	router := gin.New()
+	//--------------------------------------------------
+	// Infrastructure
+	//--------------------------------------------------
 
-	// Global middleware
-	router.Use(gin.Recovery())
+	jwtManager := jwtpkg.New(
+		cfg.JWTSecret,
+		cfg.JWTAccessTokenDuration,
+		cfg.JWTRefreshTokenDuration,
+	)
 
-	// Root endpoint
-	router.GET("/", func(c *gin.Context) {
+	//--------------------------------------------------
+	// User Domain
+	//--------------------------------------------------
+
+	userRepository := userpostgres.New(db)
+
+	userService := userservice.New(
+		userRepository,
+	)
+
+	userHandler := userhandler.New(
+		userService,
+	)
+
+
+
+	walletRepository := walletpostgres.New(db)
+
+walletService := walletservice.New(
+	walletRepository,
+)
+
+walletHandler := wallethandler.New(
+	walletService,
+)
+
+	//--------------------------------------------------
+	// Auth Domain
+	//--------------------------------------------------
+
+	authService := authservice.New(
+		userService,
+		jwtManager,
+	)
+
+	authHandler := authhandler.New(
+		authService,
+	)
+
+	//--------------------------------------------------
+	// Health Check
+	//--------------------------------------------------
+
+	engine.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"application": "jck-connect",
-			"version":     "v0.1.0",
-			"status":      "running",
+			"status": "ok",
 		})
 	})
 
-	// Health check
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"status":  "ok",
-			"service": "jck-connect",
-		})
-	})
-
+	//--------------------------------------------------
 	// API v1
-	api := router.Group("/api/v1")
-	{
-		api.GET("/ping", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "API v1 is running",
-			})
-		})
-	}
+	//--------------------------------------------------
 
-	return router
+	api := engine.Group("/api/v1")
+
+	//--------------------------------------------------
+	// Public Routes
+	//--------------------------------------------------
+
+	auth.RegisterRoutes(
+		api,
+		authHandler,
+	)
+
+	//--------------------------------------------------
+	// Protected Routes
+	//--------------------------------------------------
+
+	protected := api.Group("")
+	protected.Use(
+		middleware.Auth(jwtManager),
+	)
+
+	user.RegisterRoutes(
+		protected,
+		userHandler,
+	)
+	wallet.RegisterRoutes(
+		protected,
+		walletHandler,
+	)
 }

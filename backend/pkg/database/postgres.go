@@ -1,13 +1,14 @@
 package database
 
 import (
-	"context"
-	"fmt"
-	"time"
+    "context"
+    "fmt"
+    "log"
+    "time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+    "github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/JCKFinland/jck-connect/backend/internal/config"
+    "github.com/JCKFinland/jck-connect/backend/internal/config"
 )
 
 type Database struct {
@@ -16,6 +17,7 @@ type Database struct {
 
 // New creates a PostgreSQL connection pool.
 func New(cfg *config.Config) (*Database, error) {
+
 	dsn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
 		cfg.DBUser,
@@ -38,6 +40,13 @@ func New(cfg *config.Config) (*Database, error) {
 		pool.Close()
 		return nil, fmt.Errorf("ping database: %w", err)
 	}
+
+	log.Printf(
+		"Connected to PostgreSQL (%s:%s/%s)",
+		cfg.DBHost,
+		cfg.DBPort,
+		cfg.DBName,
+	)
 
 	return &Database{
 		Pool: pool,

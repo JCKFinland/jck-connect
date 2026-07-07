@@ -1,0 +1,2 @@
+-- Reserved for future development.
+-- Admin users will be seeded here.

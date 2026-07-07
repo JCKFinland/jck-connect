@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -21,10 +22,14 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	DBSSLMode  string
+
+	// JWT
+	JWTSecret               string
+	JWTAccessTokenDuration  time.Duration
+	JWTRefreshTokenDuration time.Duration
 }
 
 // Load loads configuration from environment variables.
-// It automatically loads a .env file if one exists.
 func Load() *Config {
 	// Ignore error if .env does not exist.
 	_ = godotenv.Load()
@@ -40,6 +45,21 @@ func Load() *Config {
 		DBPassword: getEnv("DB_PASSWORD", ""),
 		DBName:     getEnv("DB_NAME", "jck_connect"),
 		DBSSLMode:  getEnv("DB_SSLMODE", "disable"),
+
+		JWTSecret: getEnv(
+			"JWT_SECRET",
+			"change-this-secret-before-production",
+		),
+
+		JWTAccessTokenDuration: parseDuration(
+			getEnv("JWT_ACCESS_TOKEN_DURATION", "15m"),
+			15*time.Minute,
+		),
+
+		JWTRefreshTokenDuration: parseDuration(
+			getEnv("JWT_REFRESH_TOKEN_DURATION", "168h"),
+			168*time.Hour,
+		),
 	}
 
 	log.Printf(
@@ -53,9 +73,19 @@ func Load() *Config {
 
 func getEnv(key, fallback string) string {
 	value := os.Getenv(key)
+
 	if value == "" {
 		return fallback
 	}
 
 	return value
+}
+
+func parseDuration(value string, fallback time.Duration) time.Duration {
+	duration, err := time.ParseDuration(value)
+	if err != nil {
+		return fallback
+	}
+
+	return duration
 }
