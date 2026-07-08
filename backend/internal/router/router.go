@@ -11,23 +11,25 @@ import (
 	authhandler "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/handler"
 	authservice "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/service"
 
+	order "github.com/JCKFinland/jck-connect/backend/internal/domain/order"
+	orderhandler "github.com/JCKFinland/jck-connect/backend/internal/domain/order/handler"
+	orderpostgres "github.com/JCKFinland/jck-connect/backend/internal/domain/order/repository/postgres"
+	orderservice "github.com/JCKFinland/jck-connect/backend/internal/domain/order/service"
+
 	user "github.com/JCKFinland/jck-connect/backend/internal/domain/user"
 	userhandler "github.com/JCKFinland/jck-connect/backend/internal/domain/user/handler"
 	userpostgres "github.com/JCKFinland/jck-connect/backend/internal/domain/user/repository/postgres"
 	userservice "github.com/JCKFinland/jck-connect/backend/internal/domain/user/service"
 
+	wallet "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet"
+	wallethandler "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/handler"
+	walletpostgres "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/repository/postgres"
+	walletservice "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/service"
+
 	"github.com/JCKFinland/jck-connect/backend/internal/middleware"
 
 	"github.com/JCKFinland/jck-connect/backend/pkg/database"
 	jwtpkg "github.com/JCKFinland/jck-connect/backend/pkg/jwt"
-
-	wallet "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet"
-
-wallethandler "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/handler"
-
-walletpostgres "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/repository/postgres"
-
-walletservice "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/service"
 )
 
 // Register registers all application routes.
@@ -61,17 +63,33 @@ func Register(
 		userService,
 	)
 
-
+	//--------------------------------------------------
+	// Wallet Domain
+	//--------------------------------------------------
 
 	walletRepository := walletpostgres.New(db)
 
-walletService := walletservice.New(
-	walletRepository,
-)
+	walletService := walletservice.New(
+		walletRepository,
+	)
 
-walletHandler := wallethandler.New(
-	walletService,
-)
+	walletHandler := wallethandler.New(
+		walletService,
+	)
+
+	//--------------------------------------------------
+	// Order Domain
+	//--------------------------------------------------
+
+	orderRepository := orderpostgres.New(db)
+
+	orderService := orderservice.New(
+		orderRepository,
+	)
+
+	orderHandler := orderhandler.New(
+		orderService,
+	)
 
 	//--------------------------------------------------
 	// Auth Domain
@@ -124,8 +142,14 @@ walletHandler := wallethandler.New(
 		protected,
 		userHandler,
 	)
+
 	wallet.RegisterRoutes(
 		protected,
 		walletHandler,
+	)
+
+	order.RegisterRoutes(
+		protected,
+		orderHandler,
 	)
 }
