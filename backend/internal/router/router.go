@@ -30,6 +30,14 @@ import (
 
 	"github.com/JCKFinland/jck-connect/backend/pkg/database"
 	jwtpkg "github.com/JCKFinland/jck-connect/backend/pkg/jwt"
+
+	product "github.com/JCKFinland/jck-connect/backend/internal/domain/product"
+
+	producthandler "github.com/JCKFinland/jck-connect/backend/internal/domain/product/handler"
+
+	productpostgres "github.com/JCKFinland/jck-connect/backend/internal/domain/product/repository/postgres"
+
+	productservice "github.com/JCKFinland/jck-connect/backend/internal/domain/product/service"
 )
 
 // Register registers all application routes.
@@ -75,6 +83,20 @@ func Register(
 
 	walletHandler := wallethandler.New(
 		walletService,
+	)
+
+	//--------------------------------------------------
+	// Product Domain
+	//--------------------------------------------------
+
+	productRepository := productpostgres.New(db)
+
+	productService := productservice.New(
+		productRepository,
+	)
+
+	productHandler := producthandler.New(
+		productService,
 	)
 
 	//--------------------------------------------------
@@ -151,5 +173,10 @@ func Register(
 	order.RegisterRoutes(
 		protected,
 		orderHandler,
+	)
+
+	product.RegisterRoutes(
+		protected,
+		productHandler,
 	)
 }
