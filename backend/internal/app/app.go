@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
 	"github.com/JCKFinland/jck-connect/backend/internal/config"
+	"github.com/JCKFinland/jck-connect/backend/internal/container"
 	"github.com/JCKFinland/jck-connect/backend/internal/router"
 	"github.com/JCKFinland/jck-connect/backend/pkg/database"
 )
@@ -17,18 +17,22 @@ import (
 type App struct {
 	config *config.Config
 	db     *database.Database
+	container *container.Container
 	engine *gin.Engine
 	server *http.Server
 }
 
-// New creates a new application.
+// New creates a new application using the default configuration.
 func New() (*App, error) {
+	return NewWithConfig(
+		config.Load(),
+	)
+}
 
-	//--------------------------------------------------
-	// Load configuration
-	//--------------------------------------------------
-
-	cfg := config.Load()
+// NewWithConfig creates a new application using the provided configuration.
+func NewWithConfig(
+	cfg *config.Config,
+) (*App, error) {
 
 	//--------------------------------------------------
 	// Connect database
@@ -40,16 +44,23 @@ func New() (*App, error) {
 	}
 
 	//--------------------------------------------------
-	// Gin mode
+	// Build dependency container
+	//--------------------------------------------------
+
+	c := container.New(
+		cfg,
+		db,
+	)
+
+	c.Compose()
+
+	//--------------------------------------------------
+	// Configure Gin
 	//--------------------------------------------------
 
 	if cfg.AppEnv == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
-
-	//--------------------------------------------------
-	// Create Gin engine
-	//--------------------------------------------------
 
 	engine := gin.New()
 
@@ -59,8 +70,7 @@ func New() (*App, error) {
 
 	router.Register(
 		engine,
-		cfg,
-		db,
+		c,
 	)
 
 	//--------------------------------------------------
@@ -75,6 +85,7 @@ func New() (*App, error) {
 	return &App{
 		config: cfg,
 		db:     db,
+		container: c,
 		engine: engine,
 		server: server,
 	}, nil
@@ -85,7 +96,7 @@ func (a *App) Config() *config.Config {
 	return a.config
 }
 
-// Engine returns the Gin engine.
+// Engine returns the HTTP handler.
 func (a *App) Engine() *gin.Engine {
 	return a.engine
 }
@@ -100,7 +111,6 @@ func (a *App) Run() error {
 	)
 
 	err := a.server.ListenAndServe()
-
 	if err != nil && err != http.ErrServerClosed {
 		return err
 	}
@@ -114,7 +124,7 @@ func (a *App) Shutdown(
 ) error {
 
 	//--------------------------------------------------
-	// Stop HTTP server
+	// Shutdown HTTP server
 	//--------------------------------------------------
 
 	if err := a.server.Shutdown(ctx); err != nil {
@@ -122,7 +132,7 @@ func (a *App) Shutdown(
 	}
 
 	//--------------------------------------------------
-	// Close database connection
+	// Close database
 	//--------------------------------------------------
 
 	if a.db != nil {
@@ -131,3 +141,14 @@ func (a *App) Shutdown(
 
 	return nil
 }
+
+// DB returns the application's database.
+func (a *App) DB() *database.Database {
+	return a.db
+}
+
+// Container returns the application's dependency container.
+func (a *App) Container() *container.Container {
+	return a.container
+}
+

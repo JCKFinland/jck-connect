@@ -12,22 +12,31 @@ import (
 	"github.com/JCKFinland/jck-connect/backend/pkg/database"
 )
 
-type Repository struct {
+type repository struct {
 	db database.DBTX
 }
 
 // Compile-time interface check.
-var _ userrepo.Repository = (*Repository)(nil)
+var _ userrepo.Repository = (*repository)(nil)
 
 // New creates a PostgreSQL user repository.
 func New(db *database.Database) userrepo.Repository {
-	return &Repository{
+	return &repository{
 		db: db,
 	}
 }
 
+func NewTx(
+	tx database.DBTX,
+) userrepo.Repository {
+
+	return &repository{
+		db: tx,
+	}
+}
+
 // Create inserts a new user.
-func (r *Repository) Create(
+func (r *repository) Create(
 	ctx context.Context,
 	user *entity.User,
 ) error {
@@ -68,7 +77,7 @@ VALUES (
 }
 
 // Update updates an existing user.
-func (r *Repository) Update(
+func (r *repository) Update(
 	ctx context.Context,
 	user *entity.User,
 ) error {
@@ -105,7 +114,7 @@ WHERE id = $1
 }
 
 // FindByID returns a user by ID.
-func (r *Repository) FindByID(
+func (r *repository) FindByID(
 	ctx context.Context,
 	id string,
 ) (*entity.User, error) {
@@ -158,7 +167,7 @@ WHERE id = $1
 }
 
 // FindByPiUID returns a user by Pi UID.
-func (r *Repository) FindByPiUID(
+func (r *repository) FindByPiUID(
 	ctx context.Context,
 	piUID string,
 ) (*entity.User, error) {
@@ -212,7 +221,7 @@ WHERE pi_uid = $1
 
 
 // FindByPiUsername returns a user by Pi username.
-func (r *Repository) FindByPiUsername(
+func (r *repository) FindByPiUsername(
 	ctx context.Context,
 	username string,
 ) (*entity.User, error) {
@@ -263,7 +272,7 @@ WHERE pi_username = $1
 	return &user, nil
 }
 // List returns all users.
-func (r *Repository) List(
+func (r *repository) List(
 	ctx context.Context,
 ) ([]*entity.User, error) {
 
@@ -324,7 +333,7 @@ rows, err := r.db.Query(
 
 // Delete is intentionally not implemented.
 // Users should be deactivated instead of permanently removed.
-func (r *Repository) Delete(
+func (r *repository) Delete(
 	ctx context.Context,
 	id string,
 ) error {

@@ -6,6 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 
+	walletentity "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
+
 	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
 )
 
@@ -13,10 +15,10 @@ func (s *service) Debit(
 	ctx context.Context,
 	userID uuid.UUID,
 	amount decimal.Decimal,
-) error {
+) (*walletentity.Wallet, error) {
 
 	if amount.LessThanOrEqual(decimal.Zero) {
-		return sharedErrors.New(
+		return nil, sharedErrors.New(
 			sharedErrors.CodeBadRequest,
 			sharedErrors.MsgBadRequest,
 			nil,
@@ -28,15 +30,19 @@ func (s *service) Debit(
 		userID,
 	)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := wallet.Debit(amount); err != nil {
-		return err
+		return nil, err
 	}
 
-	return s.repository.Update(
+	if err := s.repository.Update(
 		ctx,
 		wallet,
-	)
+	); err != nil {
+		return nil, err
+	}
+
+	return wallet, nil
 }

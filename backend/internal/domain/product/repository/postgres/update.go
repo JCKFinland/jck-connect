@@ -9,7 +9,7 @@ import (
 )
 
 // Update updates an existing product.
-func (r *Repository) Update(
+func (r repository) Update(
 	ctx context.Context,
 	product *productentity.Product,
 ) error {

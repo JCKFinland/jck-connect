@@ -16,11 +16,7 @@ func (s *service) Update(
 ) error {
 
 	if order == nil {
-		return sharedErrors.New(
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
-			nil,
-		)
+		return sharedErrors.BadRequest(nil)
 	}
 
 	//--------------------------------------------------

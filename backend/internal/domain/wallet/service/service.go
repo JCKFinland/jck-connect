@@ -27,7 +27,7 @@ type Service interface {
 		ctx context.Context,
 		userID uuid.UUID,
 		amount decimal.Decimal,
-	) error
+	) (*walletentity.Wallet, error)
 
 	HasSufficientBalance(
 		ctx context.Context,

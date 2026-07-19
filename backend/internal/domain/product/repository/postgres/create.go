@@ -7,7 +7,7 @@ import (
 )
 
 // Create inserts a new product.
-func (r *Repository) Create(
+func (r repository) Create(
 	ctx context.Context,
 	product *productentity.Product,
 ) error {

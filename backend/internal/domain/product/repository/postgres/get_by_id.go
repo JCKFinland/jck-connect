@@ -12,7 +12,7 @@ import (
 )
 
 // GetByID returns a product by its ID.
-func (r *Repository) GetByID(
+func (r repository) GetByID(
 	ctx context.Context,
 	id uuid.UUID,
 ) (*productentity.Product, error) {

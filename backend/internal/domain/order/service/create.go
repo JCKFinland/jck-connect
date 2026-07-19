@@ -18,10 +18,8 @@ func (s *service) Create(
 ) error {
 
 	if order == nil {
-		return sharedErrors.New(
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
-			nil,
+		return sharedErrors.ProductNotFound(
+			sharedErrors.ErrNotFound,
 		)
 	}
 

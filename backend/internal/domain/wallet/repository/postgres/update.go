@@ -6,7 +6,7 @@ import (
 	"github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
 )
 
-func (r *Repository) Update(
+func (r *repository) Update(
 	ctx context.Context,
 	wallet *entity.Wallet,
 ) error {

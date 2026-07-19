@@ -9,7 +9,7 @@ import (
 	"github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
 )
 
-func (r *Repository) GetByUserID(
+func (r *repository) GetByUserID(
 	ctx context.Context,
 	userID uuid.UUID,
 ) (*entity.Wallet, error) {

@@ -7,7 +7,7 @@ import (
 )
 
 // List returns all products ordered by name.
-func (r *Repository) List(
+func (r repository) List(
 	ctx context.Context,
 ) ([]*productentity.Product, error) {
 

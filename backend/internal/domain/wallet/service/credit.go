@@ -16,11 +16,8 @@ func (s *service) Credit(
 ) error {
 
 	if amount.LessThanOrEqual(decimal.Zero) {
-		return sharedErrors.New(
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
-			nil,
-		)
+		
+		return sharedErrors.BadRequest(nil)
 	}
 
 	wallet, err := s.GetByUserID(
