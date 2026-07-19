@@ -16,7 +16,6 @@ func (s *service) Credit(
 ) error {
 
 	if amount.LessThanOrEqual(decimal.Zero) {
-		
 		return sharedErrors.BadRequest(nil)
 	}
 

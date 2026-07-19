@@ -55,9 +55,7 @@ func (r *Repository) GetByID(
 	if err != nil {
 
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, sharedErrors.New(
-				sharedErrors.CodeNotFound,
-				sharedErrors.MsgNotFound,
+			return nil, sharedErrors.OrderNotFound(
 				sharedErrors.ErrNotFound,
 			)
 		}

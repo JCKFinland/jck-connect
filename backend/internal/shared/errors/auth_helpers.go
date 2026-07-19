@@ -39,3 +39,19 @@ func UserAlreadyExists(err error) *AppError {
 		err,
 	)
 }
+
+func PiUIDRequired(err error) *AppError {
+    return New(
+        CodeValidationFailed,
+        MsgPiUIDRequired,
+        err,
+    )
+}
+
+func PiUsernameRequired(err error) *AppError {
+    return New(
+        CodeValidationFailed,
+        MsgPiUsernameRequired,
+        err,
+    )
+}

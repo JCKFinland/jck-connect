@@ -53,9 +53,7 @@ func (s *service) Login(
 ) (*authdto.LoginResponse, error) {
 
 	if req == nil {
-		return nil, sharedErrors.New(
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
+		return nil, sharedErrors.BadRequest(
 			errors.New("login request cannot be nil"),
 		)
 	}
@@ -64,19 +62,11 @@ func (s *service) Login(
 	req.PiUsername = strings.TrimSpace(req.PiUsername)
 
 	if req.PiUID == "" {
-		return nil, sharedErrors.New(
-			sharedErrors.CodeValidationFailed,
-			"Pi UID is required.",
-			nil,
-		)
+		return nil, sharedErrors.PiUIDRequired(nil)
 	}
 
 	if req.PiUsername == "" {
-		return nil, sharedErrors.New(
-			sharedErrors.CodeValidationFailed,
-			"Pi Username is required.",
-			nil,
-		)
+		return nil, sharedErrors.PiUsernameRequired(nil)
 	}
 
 	// Attempt to locate the user.

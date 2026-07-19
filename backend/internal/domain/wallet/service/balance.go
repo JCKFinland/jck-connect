@@ -16,11 +16,7 @@ func (s *service) HasSufficientBalance(
 ) (bool, error) {
 
 	if amount.LessThanOrEqual(decimal.Zero) {
-		return false, sharedErrors.New(
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
-			nil,
-		)
+		return false, sharedErrors.BadRequest(nil)
 	}
 
 	wallet, err := s.GetByUserID(

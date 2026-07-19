@@ -153,9 +153,7 @@ WHERE id = $1
 	if err != nil {
 
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, sharedErrors.New(
-				sharedErrors.CodeNotFound,
-				"User not found.",
+			return nil, sharedErrors.UserNotFound(
 				sharedErrors.ErrNotFound,
 			)
 		}
@@ -205,9 +203,7 @@ WHERE pi_uid = $1
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, sharedErrors.New(
-				sharedErrors.CodeNotFound,
-				"User not found.",
+			return nil, sharedErrors.UserNotFound(
 				sharedErrors.ErrNotFound,
 			)
 		}
@@ -259,9 +255,7 @@ WHERE pi_username = $1
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, sharedErrors.New(
-				sharedErrors.CodeNotFound,
-				"User not found.",
+			return nil, sharedErrors.UserNotFound(
 				sharedErrors.ErrNotFound,
 			)
 		}

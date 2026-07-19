@@ -47,3 +47,11 @@ func InternalServer(err error) *AppError {
         err,
     )
 }
+
+func NotFound(err error) *AppError {
+    return New(
+        CodeNotFound,
+        MsgNotFound,
+        err,
+    )
+}

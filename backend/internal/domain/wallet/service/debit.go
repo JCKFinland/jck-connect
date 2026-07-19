@@ -18,11 +18,7 @@ func (s *service) Debit(
 ) (*walletentity.Wallet, error) {
 
 	if amount.LessThanOrEqual(decimal.Zero) {
-		return nil, sharedErrors.New(
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
-			nil,
-		)
+		return nil, sharedErrors.BadRequest(nil)
 	}
 
 	wallet, err := s.GetByUserID(

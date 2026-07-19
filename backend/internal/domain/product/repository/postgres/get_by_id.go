@@ -55,9 +55,7 @@ func (r repository) GetByID(
 	if err != nil {
 
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, sharedErrors.New(
-				sharedErrors.CodeNotFound,
-				"Product not found.",
+			return nil, sharedErrors.ProductNotFound(
 				sharedErrors.ErrNotFound,
 			)
 		}

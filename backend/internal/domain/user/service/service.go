@@ -41,9 +41,7 @@ func (s *service) Create(
 ) error {
 
 	if user == nil {
-		return sharedErrors.New(
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
+		return sharedErrors.BadRequest(
 			errors.New("user cannot be nil"),
 		)
 	}
@@ -57,19 +55,11 @@ func (s *service) Create(
 
 	// Validate required fields.
 	if user.PiUID == "" {
-		return sharedErrors.New(
-			sharedErrors.CodeValidationFailed,
-			"Pi UID is required.",
-			nil,
-		)
+		return sharedErrors.PiUIDRequired(nil)
 	}
 
 	if user.PiUsername == "" {
-		return sharedErrors.New(
-			sharedErrors.CodeValidationFailed,
-			"Pi Username is required.",
-			nil,
-		)
+		return sharedErrors.PiUsernameRequired(nil)
 	}
 
 	now := time.Now().UTC()
@@ -106,9 +96,7 @@ func (s *service) Update(
 ) error {
 
 	if user == nil {
-		return sharedErrors.New(
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
+		return sharedErrors.BadRequest(
 			errors.New("user cannot be nil"),
 		)
 	}

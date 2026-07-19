@@ -94,11 +94,7 @@ func (s *service) Purchase(
 			}
 
 			if !hasBalance {
-				return sharedErrors.New(
-					sharedErrors.CodeWalletInsufficientBalance,
-					sharedErrors.MsgWalletInsufficientBalance,
-					nil,
-				)
+				return sharedErrors.InsufficientWalletBalance(nil)
 			}
 
 			//--------------------------------------------------

@@ -13,6 +13,8 @@ const (
 	MsgValidationFailed   = "Validation failed."
 	MsgInternalServer     = "An internal server error occurred."
 	MsgEndpointNotFound   = "The requested endpoint does not exist."
+	MsgPiUIDRequired      = "Pi UID is required."
+	MsgPiUsernameRequired = "Pi Username is required."
 
 	// Authentication
 
