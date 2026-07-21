@@ -6,8 +6,8 @@ import (
 
 // WithTransaction executes fn inside a database transaction.
 func (db *Database) WithTransaction(
-    ctx context.Context,
-    fn func(tx DBTX) error,
+	ctx context.Context,
+	fn func(tx DBTX) error,
 ) error {
 
 	tx, err := db.Pool.Begin(ctx)

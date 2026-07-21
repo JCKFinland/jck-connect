@@ -2,13 +2,12 @@ package service
 
 import (
 	"context"
-	"errors"
 	"strings"
 	"time"
 
 	authdto "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/dto"
-	"github.com/JCKFinland/jck-connect/backend/internal/domain/user/entity"
 	userdto "github.com/JCKFinland/jck-connect/backend/internal/domain/user/dto"
+	"github.com/JCKFinland/jck-connect/backend/internal/domain/user/entity"
 	userservice "github.com/JCKFinland/jck-connect/backend/internal/domain/user/service"
 	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
 	"github.com/JCKFinland/jck-connect/backend/pkg/jwt"
@@ -42,7 +41,6 @@ func New(
 	}
 }
 
-
 // Login authenticates a Pi user.
 //
 // If the user does not already exist, a new local account
@@ -53,9 +51,7 @@ func (s *service) Login(
 ) (*authdto.LoginResponse, error) {
 
 	if req == nil {
-		return nil, sharedErrors.BadRequest(
-			errors.New("login request cannot be nil"),
-		)
+		return nil, sharedErrors.BadRequest(nil)
 	}
 
 	req.PiUID = strings.TrimSpace(req.PiUID)

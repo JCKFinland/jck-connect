@@ -3,23 +3,25 @@ package app
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
 	"github.com/JCKFinland/jck-connect/backend/internal/config"
 	"github.com/JCKFinland/jck-connect/backend/internal/container"
+	"github.com/JCKFinland/jck-connect/backend/internal/middleware"
 	"github.com/JCKFinland/jck-connect/backend/internal/router"
 	"github.com/JCKFinland/jck-connect/backend/pkg/database"
+	"github.com/JCKFinland/jck-connect/backend/pkg/logger"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+	"net/http"
 )
 
 // App represents the application.
 type App struct {
-	config *config.Config
-	db     *database.Database
+	config    *config.Config
+	db        *database.Database
 	container *container.Container
-	engine *gin.Engine
-	server *http.Server
+	engine    *gin.Engine
+	server    *http.Server
+	logger    *logger.Logger
 }
 
 // New creates a new application using the default configuration.
@@ -55,6 +57,15 @@ func NewWithConfig(
 	c.Compose()
 
 	//--------------------------------------------------
+	// Logger
+	//--------------------------------------------------
+
+	appLogger, err := logger.New(cfg.AppEnv)
+	if err != nil {
+		return nil, fmt.Errorf("create logger: %w", err)
+	}
+
+	//--------------------------------------------------
 	// Configure Gin
 	//--------------------------------------------------
 
@@ -63,6 +74,14 @@ func NewWithConfig(
 	}
 
 	engine := gin.New()
+
+	engine.Use(
+		middleware.Logger(appLogger),
+	)
+
+	engine.Use(
+		gin.Recovery(),
+	)
 
 	//--------------------------------------------------
 	// Register routes
@@ -83,11 +102,12 @@ func NewWithConfig(
 	}
 
 	return &App{
-		config: cfg,
-		db:     db,
+		config:    cfg,
+		db:        db,
 		container: c,
-		engine: engine,
-		server: server,
+		engine:    engine,
+		server:    server,
+		logger:    appLogger,
 	}, nil
 }
 
@@ -104,10 +124,10 @@ func (a *App) Engine() *gin.Engine {
 // Run starts the HTTP server.
 func (a *App) Run() error {
 
-	log.Printf(
-		"%s API starting on http://localhost:%s",
-		a.config.AppName,
-		a.config.AppPort,
+	a.logger.Info(
+		"API server starting",
+		zap.String("app", a.config.AppName),
+		zap.String("port", a.config.AppPort),
 	)
 
 	err := a.server.ListenAndServe()
@@ -139,6 +159,10 @@ func (a *App) Shutdown(
 		a.db.Close()
 	}
 
+	if a.logger != nil {
+		_ = a.logger.Sync()
+	}
+
 	return nil
 }
 
@@ -151,4 +175,3 @@ func (a *App) DB() *database.Database {
 func (a *App) Container() *container.Container {
 	return a.container
 }
-

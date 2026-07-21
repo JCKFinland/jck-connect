@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/JCKFinland/jck-connect/backend/internal/test/fixture"
 	productentity "github.com/JCKFinland/jck-connect/backend/internal/domain/product/entity"
+	"github.com/JCKFinland/jck-connect/backend/internal/test/fixture"
 )
 
 func CreateProduct(

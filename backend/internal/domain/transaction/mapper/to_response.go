@@ -15,17 +15,17 @@ func ToResponse(
 	}
 
 	return &transactiondto.TransactionResponse{
-		ID:             transaction.ID.String(),
-		OrderID:        transaction.OrderID.String(),
-		WalletID:       transaction.WalletID.String(),
-		Type:           string(transaction.Type),
-		Status:         string(transaction.Status),
-		Amount:         transaction.Amount.String(),
-		Currency:       transaction.Currency,
-		BalanceBefore:  transaction.BalanceBefore.String(),
-		BalanceAfter:   transaction.BalanceAfter.String(),
-		Reference:      transaction.Reference,
-		Description:    transaction.Description,
-		CreatedAt:      transaction.CreatedAt,
+		ID:            transaction.ID.String(),
+		OrderID:       transaction.OrderID.String(),
+		WalletID:      transaction.WalletID.String(),
+		Type:          string(transaction.Type),
+		Status:        string(transaction.Status),
+		Amount:        transaction.Amount.String(),
+		Currency:      transaction.Currency,
+		BalanceBefore: transaction.BalanceBefore.String(),
+		BalanceAfter:  transaction.BalanceAfter.String(),
+		Reference:     transaction.Reference,
+		Description:   transaction.Description,
+		CreatedAt:     transaction.CreatedAt,
 	}
 }

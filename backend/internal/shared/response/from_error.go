@@ -55,10 +55,8 @@ func FromError(
 		sharedErrors.CodeWalletNotFound:
 		status = http.StatusNotFound
 
-
 	case sharedErrors.CodeWalletInsufficientBalance:
 		status = http.StatusUnprocessableEntity
-		
 
 	case sharedErrors.CodeConflict,
 		sharedErrors.CodeAuthUserExists,

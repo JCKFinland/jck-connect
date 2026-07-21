@@ -16,8 +16,6 @@ import (
 
 	walletrepo "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/repository"
 	walletservice "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/service"
-
-	
 )
 
 // PurchaseRequest contains everything required to perform a purchase.

@@ -63,14 +63,13 @@ import (
 	// Purchase Use Case
 	//--------------------------------------------------
 
-	purchase "github.com/JCKFinland/jck-connect/backend/internal/usecase/purchase"
 	purchasehandler "github.com/JCKFinland/jck-connect/backend/internal/handler/purchase"
+	purchase "github.com/JCKFinland/jck-connect/backend/internal/usecase/purchase"
 )
 
 type Container struct {
 	Config *config.Config
 	DB     *database.Database
-	
 
 	//--------------------------------------------------
 	// User
@@ -214,7 +213,6 @@ func (c *Container) Compose() {
 	//--------------------------------------------------
 
 	c.BuildAuth()
-
 
 	//--------------------------------------------------
 	// Product

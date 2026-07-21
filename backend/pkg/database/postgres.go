@@ -1,14 +1,14 @@
 package database
 
 import (
-    "context"
-    "fmt"
-    "log"
-    "time"
+	"context"
+	"fmt"
+	"log"
+	"time"
 
-    "github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 
-    "github.com/JCKFinland/jck-connect/backend/internal/config"
+	"github.com/JCKFinland/jck-connect/backend/internal/config"
 )
 
 type Database struct {

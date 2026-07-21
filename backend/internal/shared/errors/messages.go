@@ -26,25 +26,25 @@ const (
 
 	// Pi
 
-	MsgPiLoginFailed      = "Unable to authenticate with Pi."
-	MsgPiPaymentFailed    = "Pi payment verification failed."
-	MsgPiBalanceLow       = "Insufficient Pi balance."
+	MsgPiLoginFailed   = "Unable to authenticate with Pi."
+	MsgPiPaymentFailed = "Pi payment verification failed."
+	MsgPiBalanceLow    = "Insufficient Pi balance."
 
 	// Product
 
-	MsgProductNotFound    = "Requested product not found."
+	MsgProductNotFound = "Requested product not found."
 
 	// Order
 
-	MsgOrderExpired       = "Order has expired."
+	MsgOrderExpired = "Order has expired."
 
 	// Transaction
 
-	MsgTransactionFailed  = "Transaction failed."
+	MsgTransactionFailed = "Transaction failed."
 
 	// VTpass
 
-	MsgVTpassFailed       = "Unable to process utility purchase."
+	MsgVTpassFailed = "Unable to process utility purchase."
 )
 
 // Wallet

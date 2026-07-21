@@ -11,7 +11,6 @@ import (
 //
 // Both *pgxpool.Pool and pgx.Tx satisfy this interface.
 type DBTX interface {
-
 	Exec(
 		ctx context.Context,
 		sql string,
@@ -54,4 +53,3 @@ func (db *Database) QueryRow(
 ) pgx.Row {
 	return db.Pool.QueryRow(ctx, sql, args...)
 }
-

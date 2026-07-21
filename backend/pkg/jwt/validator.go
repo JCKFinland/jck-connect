@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrInvalidToken = errors.New("invalid token")
+	ErrInvalidToken  = errors.New("invalid token")
 	ErrInvalidClaims = errors.New("invalid claims")
 )
 

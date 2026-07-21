@@ -7,8 +7,8 @@ import (
 )
 
 type Manager struct {
-	secretKey      []byte
-	accessDuration time.Duration
+	secretKey       []byte
+	accessDuration  time.Duration
 	refreshDuration time.Duration
 }
 
@@ -24,8 +24,6 @@ func New(
 		refreshDuration: refreshDuration,
 	}
 }
-
-
 
 // AccessTokenDuration returns the configured access token lifetime.
 func (m *Manager) AccessTokenDuration() time.Duration {

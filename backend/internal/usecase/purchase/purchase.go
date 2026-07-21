@@ -2,7 +2,6 @@ package purchase
 
 import (
 	"context"
-	"errors"
 
 	"github.com/google/uuid"
 
@@ -25,11 +24,11 @@ func (s *service) Purchase(
 	//--------------------------------------------------
 
 	if request.UserID == uuid.Nil {
-		return errors.New("user ID is required")
+		return sharedErrors.UserIDRequired(nil)
 	}
 
 	if request.ProductID == uuid.Nil {
-		return errors.New("product ID is required")
+		return sharedErrors.ProductIDRequired(nil)
 	}
 
 	//--------------------------------------------------

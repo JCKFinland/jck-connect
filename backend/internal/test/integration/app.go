@@ -4,18 +4,17 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-	"github.com/JCKFinland/jck-connect/backend/internal/container"
 	"github.com/JCKFinland/jck-connect/backend/internal/app"
 	"github.com/JCKFinland/jck-connect/backend/internal/config"
+	"github.com/JCKFinland/jck-connect/backend/internal/container"
+	"github.com/stretchr/testify/require"
 )
 
 // TestApp wraps the application used by integration tests.
 type TestApp struct {
-	App *app.App
+	App       *app.App
 	Container *container.Container
-	Engine http.Handler
-	
+	Engine    http.Handler
 }
 
 // NewTestApp creates a fully initialized application for integration tests.
@@ -37,8 +36,8 @@ func NewTestApp(
 	require.NoError(t, err)
 
 	return &TestApp{
-		App:    a,
+		App:       a,
 		Container: a.Container(),
-		Engine: a.Engine(),
+		Engine:    a.Engine(),
 	}
 }

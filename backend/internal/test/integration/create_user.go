@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/JCKFinland/jck-connect/backend/internal/test/fixture"
 	userentity "github.com/JCKFinland/jck-connect/backend/internal/domain/user/entity"
+	"github.com/JCKFinland/jck-connect/backend/internal/test/fixture"
 )
 
 func CreateUser(
