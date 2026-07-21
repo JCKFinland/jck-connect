@@ -1,7 +1,9 @@
 package logger
 
-import("time"
-"go.uber.org/zap") 
+import (
+	"go.uber.org/zap"
+	"time"
+)
 
 // Logger wraps a Zap logger.
 type Logger struct {
