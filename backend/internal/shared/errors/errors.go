@@ -4,12 +4,12 @@ import "errors"
 
 // Common reusable application errors.
 var (
-	ErrNotFound           = errors.New("resource not found")
-	ErrUnauthorized       = errors.New("unauthorized")
-	ErrForbidden          = errors.New("forbidden")
-	ErrConflict           = errors.New("resource already exists")
-	ErrValidationFailed   = errors.New("validation failed")
-	ErrInternalServer     = errors.New("internal server error")
+	ErrNotFound         = errors.New("resource not found")
+	ErrUnauthorized     = errors.New("unauthorized")
+	ErrForbidden        = errors.New("forbidden")
+	ErrConflict         = errors.New("resource already exists")
+	ErrValidationFailed = errors.New("validation failed")
+	ErrInternalServer   = errors.New("internal server error")
 )
 
 // AppError represents a reusable application error.
@@ -41,6 +41,14 @@ func New(
 	return &AppError{
 		Code:    code,
 		Message: message,
+		Err:     err,
+	}
+}
+
+func NotImplemented(err error) *AppError {
+	return &AppError{
+		Code:    CodeNotImplemented,
+		Message: "This operation is not implemented.",
 		Err:     err,
 	}
 }

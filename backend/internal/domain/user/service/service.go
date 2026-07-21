@@ -42,7 +42,7 @@ func (s *service) Create(
 
 	if user == nil {
 		return sharedErrors.BadRequest(
-			errors.New("user cannot be nil"),
+			sharedErrors.BadRequest(nil),
 		)
 	}
 
@@ -111,13 +111,6 @@ func (s *service) Update(
 	current.DisplayName = strings.TrimSpace(user.DisplayName)
 	current.Email = strings.TrimSpace(user.Email)
 	current.PhoneNumber = strings.TrimSpace(user.PhoneNumber)
-
-	// Preserve protected fields.
-	current.PiUID = current.PiUID
-	current.PiUsername = current.PiUsername
-	current.Role = current.Role
-	current.Status = current.Status
-	current.CreatedAt = current.CreatedAt
 
 	current.UpdatedAt = time.Now().UTC()
 

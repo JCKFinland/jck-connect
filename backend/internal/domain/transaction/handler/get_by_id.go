@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
 	transactionmapper "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/mapper"
+
+	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
+	response "github.com/JCKFinland/jck-connect/backend/internal/shared/response"
 )
 
 // GetByID returns a transaction by ID.
@@ -18,11 +19,11 @@ func (h *Handler) GetByID(
 		c.Param("id"),
 	)
 	if err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			gin.H{
-				"error": "invalid transaction id",
-			},
+		response.BadRequest(
+			c,
+			sharedErrors.CodeBadRequest,
+			sharedErrors.MsgBadRequest,
+			"invalid transaction id",
 		)
 		return
 	}
@@ -32,17 +33,13 @@ func (h *Handler) GetByID(
 		id,
 	)
 	if err != nil {
-		c.JSON(
-			http.StatusNotFound,
-			gin.H{
-				"error": "transaction not found",
-			},
-		)
+		response.FromError(c, err)
 		return
 	}
 
-	c.JSON(
-		http.StatusOK,
+	response.Success(
+		c,
+		response.MsgTransactionRetrieved,
 		transactionmapper.ToResponse(transaction),
 	)
 }

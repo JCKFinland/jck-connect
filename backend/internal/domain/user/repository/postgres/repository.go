@@ -214,8 +214,6 @@ WHERE pi_uid = $1
 	return &user, nil
 }
 
-
-
 // FindByPiUsername returns a user by Pi username.
 func (r *repository) FindByPiUsername(
 	ctx context.Context,
@@ -265,6 +263,7 @@ WHERE pi_username = $1
 
 	return &user, nil
 }
+
 // List returns all users.
 func (r *repository) List(
 	ctx context.Context,
@@ -286,10 +285,10 @@ FROM users
 ORDER BY created_at DESC
 `
 
-rows, err := r.db.Query(
-	ctx,
-	query,
-)
+	rows, err := r.db.Query(
+		ctx,
+		query,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -331,5 +330,5 @@ func (r *repository) Delete(
 	ctx context.Context,
 	id string,
 ) error {
-	return errors.New("user deletion is not supported")
+	return sharedErrors.NotImplemented(nil)
 }

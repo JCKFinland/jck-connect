@@ -1,4 +1,5 @@
 package handler
+
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -57,7 +58,7 @@ func (h *Handler) ListOrders(
 
 	response.Success(
 		c,
-		"Orders retrieved successfully.",
+		response.MsgOrdersRetrieved,
 		ordermapper.ToOrderResponseList(orders),
 	)
 }

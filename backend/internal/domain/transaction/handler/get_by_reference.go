@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 
 	transactionmapper "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/mapper"
+
+	response "github.com/JCKFinland/jck-connect/backend/internal/shared/response"
 )
 
 // GetByReference returns a transaction by business reference.
@@ -18,17 +18,13 @@ func (h *Handler) GetByReference(
 		c.Param("reference"),
 	)
 	if err != nil {
-		c.JSON(
-			http.StatusNotFound,
-			gin.H{
-				"error": "transaction not found",
-			},
-		)
+		response.FromError(c, err)
 		return
 	}
 
-	c.JSON(
-		http.StatusOK,
+	response.Success(
+		c,
+		response.MsgTransactionRetrieved,
 		transactionmapper.ToResponse(transaction),
 	)
 }

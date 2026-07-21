@@ -1,6 +1,7 @@
 package logger
 
-import "go.uber.org/zap"
+import("time"
+"go.uber.org/zap") 
 
 // Logger wraps a Zap logger.
 type Logger struct {
@@ -94,4 +95,26 @@ func (l *Logger) Sync() error {
 	}
 
 	return l.Logger.Sync()
+}
+
+// Field helpers.
+
+func String(key, value string) zap.Field {
+	return zap.String(key, value)
+}
+
+func Int(key string, value int) zap.Field {
+	return zap.Int(key, value)
+}
+
+func Bool(key string, value bool) zap.Field {
+	return zap.Bool(key, value)
+}
+
+func Error(err error) zap.Field {
+	return zap.Error(err)
+}
+
+func Duration(key string, value time.Duration) zap.Field {
+	return zap.Duration(key, value)
 }

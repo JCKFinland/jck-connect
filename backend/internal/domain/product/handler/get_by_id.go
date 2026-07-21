@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
 	productmapper "github.com/JCKFinland/jck-connect/backend/internal/domain/product/mapper"
+
+	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
+	response "github.com/JCKFinland/jck-connect/backend/internal/shared/response"
 )
 
 // GetByID returns a product by ID.
@@ -19,11 +20,11 @@ func (h *Handler) GetByID(
 	)
 
 	if err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			gin.H{
-				"error": "invalid product id",
-			},
+		response.BadRequest(
+			c,
+			sharedErrors.CodeBadRequest,
+			sharedErrors.MsgBadRequest,
+			"invalid product id",
 		)
 		return
 	}
@@ -34,17 +35,13 @@ func (h *Handler) GetByID(
 	)
 
 	if err != nil {
-		c.JSON(
-			http.StatusNotFound,
-			gin.H{
-				"error": err.Error(),
-			},
-		)
+		response.FromError(c, err)
 		return
 	}
 
-	c.JSON(
-		http.StatusOK,
+	response.Success(
+		c,
+		response.MsgProductsRetrieved,
 		productmapper.ToResponse(product),
 	)
 }

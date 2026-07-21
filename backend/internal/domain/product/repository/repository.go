@@ -1,3 +1,5 @@
+// Package repository defines persistence contracts
+// for the Product domain.
 package repository
 
 import (

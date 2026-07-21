@@ -15,16 +15,16 @@ func ToResponse(
 	}
 
 	return &productdto.ProductResponse{
-		ID:         product.ID,
-		Code:       product.Code,
-		Name:       product.Name,
-		Category:   product.Category,
-		Provider:   product.Provider,
-		Price:      product.Price,
-		Currency:   product.Currency,
-		Active:     product.Active,
-		CreatedAt:  product.CreatedAt,
-		UpdatedAt:  product.UpdatedAt,
+		ID:        product.ID,
+		Code:      product.Code,
+		Name:      product.Name,
+		Category:  product.Category,
+		Provider:  product.Provider,
+		Price:     product.Price,
+		Currency:  product.Currency,
+		Active:    product.Active,
+		CreatedAt: product.CreatedAt,
+		UpdatedAt: product.UpdatedAt,
 	}
 }
 

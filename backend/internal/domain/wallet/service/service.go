@@ -11,7 +11,6 @@ import (
 )
 
 type Service interface {
-
 	GetByUserID(
 		ctx context.Context,
 		userID uuid.UUID,

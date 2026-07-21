@@ -10,8 +10,8 @@ const (
 	CodeValidationFailed    = "VALIDATION_FAILED"
 	CodeInternalServerError = "INTERNAL_SERVER_ERROR"
 	CodeEndpointNotFound    = "ENDPOINT_NOT_FOUND"
+	CodeNotImplemented      = "NOT_IMPLEMENTED"
 )
-
 
 // Authentication
 const (
@@ -23,22 +23,19 @@ const (
 	CodeAuthRefreshExpired     = "AUTH_REFRESH_TOKEN_EXPIRED"
 )
 
-
 // Pi Network
 const (
-	CodePiLoginFailed          = "PI_LOGIN_FAILED"
-	CodePiUserVerification     = "PI_USER_VERIFICATION_FAILED"
-	CodePiPaymentVerification  = "PI_PAYMENT_VERIFICATION_FAILED"
-	CodePiInsufficientBalance  = "PI_INSUFFICIENT_BALANCE"
+	CodePiLoginFailed         = "PI_LOGIN_FAILED"
+	CodePiUserVerification    = "PI_USER_VERIFICATION_FAILED"
+	CodePiPaymentVerification = "PI_PAYMENT_VERIFICATION_FAILED"
+	CodePiInsufficientBalance = "PI_INSUFFICIENT_BALANCE"
 )
-
 
 // Products
 const (
 	CodeProductNotFound = "PRODUCT_NOT_FOUND"
 	CodeProductInactive = "PRODUCT_INACTIVE"
 )
-
 
 // Orders
 const (
@@ -47,14 +44,12 @@ const (
 	CodeOrderExpired          = "ORDER_EXPIRED"
 )
 
-
 // Transactions
 const (
 	CodeTransactionFailed    = "TRANSACTION_FAILED"
 	CodeTransactionNotFound  = "TRANSACTION_NOT_FOUND"
 	CodeTransactionDuplicate = "TRANSACTION_DUPLICATE"
 )
-
 
 // VTpass
 const (

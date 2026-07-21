@@ -5,8 +5,8 @@ import (
 
 	usermapper "github.com/JCKFinland/jck-connect/backend/internal/domain/user/mapper"
 	"github.com/JCKFinland/jck-connect/backend/internal/middleware"
-	response "github.com/JCKFinland/jck-connect/backend/internal/shared/response"
 	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
+	response "github.com/JCKFinland/jck-connect/backend/internal/shared/response"
 )
 
 // Me returns the authenticated user's profile.
@@ -36,7 +36,7 @@ func (h *Handler) Me(c *gin.Context) {
 
 	response.Success(
 		c,
-		"User profile retrieved successfully.",
+		response.MsgUserProfileRetrieved,
 		userResponse,
 	)
 }

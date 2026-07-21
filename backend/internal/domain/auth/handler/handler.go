@@ -1,8 +1,6 @@
 package handler
 
 import (
-	
-
 	"github.com/gin-gonic/gin"
 
 	authdto "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/dto"
@@ -50,7 +48,7 @@ func (h *Handler) Login(c *gin.Context) {
 
 	response.Success(
 		c,
-		"Login successful.",
+		response.MsgLoginSuccessful,
 		res,
 	)
 }

@@ -5,6 +5,7 @@ import (
 
 	userdto "github.com/JCKFinland/jck-connect/backend/internal/domain/user/dto"
 	usermapper "github.com/JCKFinland/jck-connect/backend/internal/domain/user/mapper"
+	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
 
 	"github.com/JCKFinland/jck-connect/backend/internal/middleware"
 
@@ -18,8 +19,8 @@ func (h *Handler) UpdateMe(c *gin.Context) {
 	if userID == "" {
 		response.Unauthorized(
 			c,
-			"UNAUTHORIZED",
-			"Authentication required.",
+			sharedErrors.CodeUnauthorized,
+			sharedErrors.MsgUnauthorized,
 			"",
 		)
 		return
@@ -30,8 +31,8 @@ func (h *Handler) UpdateMe(c *gin.Context) {
 	if err := c.ShouldBindJSON(&request); err != nil {
 		response.BadRequest(
 			c,
-			"BAD_REQUEST",
-			"Invalid request body.",
+			sharedErrors.CodeBadRequest,
+			sharedErrors.MsgBadRequest,
 			err.Error(),
 		)
 		return
@@ -60,7 +61,7 @@ func (h *Handler) UpdateMe(c *gin.Context) {
 
 	response.Success(
 		c,
-		"Profile updated successfully.",
+		response.MsgProfileUpdated,
 		usermapper.ToUserResponse(user),
 	)
 }

@@ -46,7 +46,7 @@ func (h *Handler) GetOrder(
 
 	response.Success(
 		c,
-		"Order retrieved successfully.",
+		response.MsgOrderRetrieved,
 		ordermapper.ToOrderResponse(order),
 	)
 }

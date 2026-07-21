@@ -11,9 +11,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	purchasemock "github.com/JCKFinland/jck-connect/backend/internal/usecase/purchase/mock"
 	"github.com/JCKFinland/jck-connect/backend/internal/middleware"
 	purchaseusecase "github.com/JCKFinland/jck-connect/backend/internal/usecase/purchase"
+	purchasemock "github.com/JCKFinland/jck-connect/backend/internal/usecase/purchase/mock"
 )
 
 func TestPurchase_Success(t *testing.T) {

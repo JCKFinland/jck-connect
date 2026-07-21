@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
 	transactionmapper "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/mapper"
+
+	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
+	response "github.com/JCKFinland/jck-connect/backend/internal/shared/response"
 )
 
 // ListByWallet returns wallet transaction history.
@@ -18,11 +19,11 @@ func (h *Handler) ListByWallet(
 		c.Param("walletId"),
 	)
 	if err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			gin.H{
-				"error": "invalid wallet id",
-			},
+		response.BadRequest(
+			c,
+			sharedErrors.CodeBadRequest,
+			sharedErrors.MsgBadRequest,
+			"invalid wallet id",
 		)
 		return
 	}
@@ -32,26 +33,22 @@ func (h *Handler) ListByWallet(
 		walletID,
 	)
 	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			gin.H{
-				"error": err.Error(),
-			},
-		)
+		response.FromError(c, err)
 		return
 	}
 
-	response := make([]any, 0, len(transactions))
+	items := make([]any, 0, len(transactions))
 
 	for _, transaction := range transactions {
-		response = append(
-			response,
+		items = append(
+			items,
 			transactionmapper.ToResponse(transaction),
 		)
 	}
 
-	c.JSON(
-		http.StatusOK,
-		response,
+	response.Success(
+		c,
+		response.MsgTransactionsRetrieved,
+		items,
 	)
 }

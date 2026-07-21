@@ -49,7 +49,7 @@ func (h *Handler) GetWallet(
 
 	response.Success(
 		c,
-		"Wallet retrieved successfully.",
+		response.MsgWalletRetrieved,
 		walletmapper.ToWalletResponse(wallet),
 	)
 }

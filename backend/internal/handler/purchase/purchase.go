@@ -1,15 +1,14 @@
 package purchase
 
 import (
-
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
 	purchaserequest "github.com/JCKFinland/jck-connect/backend/internal/request/purchase"
-	purchaseusecase "github.com/JCKFinland/jck-connect/backend/internal/usecase/purchase"
 	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
+	purchaseusecase "github.com/JCKFinland/jck-connect/backend/internal/usecase/purchase"
 
 	"github.com/JCKFinland/jck-connect/backend/internal/middleware"
 )
@@ -59,29 +58,29 @@ func (h *Handler) Purchase(
 	}
 
 	//--------------------------------------------------
-// Execute purchase
-//--------------------------------------------------
+	// Execute purchase
+	//--------------------------------------------------
 
-err = h.purchaseService.Purchase(
-    c.Request.Context(),
-    purchaseusecase.PurchaseRequest{
-        UserID:    userID,
-        ProductID: request.ProductID,
-    },
-)
+	err = h.purchaseService.Purchase(
+		c.Request.Context(),
+		purchaseusecase.PurchaseRequest{
+			UserID:    userID,
+			ProductID: request.ProductID,
+		},
+	)
 
-if err != nil {
+	if err != nil {
 
-    c.JSON(
-        sharedErrors.HTTPStatus(err),
-        gin.H{
-            "code":    sharedErrors.Code(err),
-            "message": sharedErrors.Message(err),
-        },
-    )
+		c.JSON(
+			sharedErrors.HTTPStatus(err),
+			gin.H{
+				"code":    sharedErrors.Code(err),
+				"message": sharedErrors.Message(err),
+			},
+		)
 
-    return
-}
+		return
+	}
 
 	//--------------------------------------------------
 	// Success
