@@ -1,6 +1,7 @@
 package container
 
 import (
+	"time"
 	"github.com/JCKFinland/jck-connect/backend/internal/config"
 	"github.com/JCKFinland/jck-connect/backend/pkg/database"
 
@@ -9,6 +10,7 @@ import (
 	//--------------------------------------------------
 
 	authhandler "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/handler"
+	authpi "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/pi"
 	authservice "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/service"
 
 	jwtpkg "github.com/JCKFinland/jck-connect/backend/pkg/jwt"
@@ -162,9 +164,28 @@ func (c *Container) BuildAuth() {
 		c.Config.JWTRefreshTokenDuration,
 	)
 
+	//--------------------------------------------------
+	// Pi Authentication
+	//--------------------------------------------------
+
+	piConfig := authpi.Config{
+		BaseURL: "https://api.minepi.com",
+		APIKey:  c.Config.PiAPIKey,
+		Timeout: 10 * time.Second,
+	}
+
+	piClient := authpi.NewClient(piConfig)
+
+	piVerifier := authpi.NewVerifier(piClient)
+
+	//--------------------------------------------------
+	// Authentication Service
+	//--------------------------------------------------
+
 	c.AuthService = authservice.New(
 		c.UserService,
 		c.JWTManager,
+		piVerifier,
 	)
 
 	c.AuthHandler = authhandler.New(

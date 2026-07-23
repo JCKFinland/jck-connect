@@ -27,6 +27,10 @@ type Config struct {
 	JWTSecret               string
 	JWTAccessTokenDuration  time.Duration
 	JWTRefreshTokenDuration time.Duration
+
+	// Pi Platform
+	PiAPIKey  string
+	PiBaseURL string
 }
 
 // Load loads configuration from environment variables.
@@ -59,6 +63,16 @@ func Load() *Config {
 		JWTRefreshTokenDuration: parseDuration(
 			getEnv("JWT_REFRESH_TOKEN_DURATION", "168h"),
 			168*time.Hour,
+		),
+
+		PiAPIKey: getEnv(
+			"PI_API_KEY",
+			"",
+		),
+		
+		PiBaseURL: getEnv(
+			"PI_BASE_URL",
+			"https://api.minepi.com",
 		),
 	}
 

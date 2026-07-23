@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"strings"
 	"time"
 
 	authdto "github.com/JCKFinland/jck-connect/backend/internal/domain/auth/dto"
+	"github.com/JCKFinland/jck-connect/backend/internal/domain/auth/pi"
 	userdto "github.com/JCKFinland/jck-connect/backend/internal/domain/user/dto"
 	"github.com/JCKFinland/jck-connect/backend/internal/domain/user/entity"
 	userservice "github.com/JCKFinland/jck-connect/backend/internal/domain/user/service"
@@ -13,12 +13,7 @@ import (
 	"github.com/JCKFinland/jck-connect/backend/pkg/jwt"
 )
 
-// Service defines authentication business logic.
 type Service interface {
-	// Login authenticates a Pi user.
-	//
-	// If the user does not yet exist in the local database,
-	// a new account is automatically created.
 	Login(
 		ctx context.Context,
 		req *authdto.LoginRequest,
@@ -28,23 +23,24 @@ type Service interface {
 type service struct {
 	userService userservice.Service
 	jwtManager  *jwt.Manager
+	verifier    pi.Verifier
 }
 
-// New creates a new authentication service.
 func New(
-	userService userservice.Service,
-	jwtManager *jwt.Manager,
+    userService userservice.Service,
+    jwtManager *jwt.Manager,
+    verifier pi.Verifier,
 ) Service {
-	return &service{
-		userService: userService,
-		jwtManager:  jwtManager,
-	}
+
+    return &service{
+        userService: userService,
+        jwtManager:  jwtManager,
+        verifier:    verifier,
+    }
 }
 
-// Login authenticates a Pi user.
-//
-// If the user does not already exist, a new local account
-// is automatically created.
+
+
 func (s *service) Login(
 	ctx context.Context,
 	req *authdto.LoginRequest,
@@ -54,44 +50,73 @@ func (s *service) Login(
 		return nil, sharedErrors.BadRequest(nil)
 	}
 
-	req.PiUID = strings.TrimSpace(req.PiUID)
-	req.PiUsername = strings.TrimSpace(req.PiUsername)
-
-	if req.PiUID == "" {
-		return nil, sharedErrors.PiUIDRequired(nil)
+	if req.AccessToken == "" {
+		return nil, sharedErrors.BadRequest(nil)
 	}
 
-	if req.PiUsername == "" {
-		return nil, sharedErrors.PiUsernameRequired(nil)
+	//----------------------------------------------------------
+	// Verify access token with Pi Platform
+	//----------------------------------------------------------
+
+	piUser, err := s.verifier.Verify(
+		ctx,
+		req.AccessToken,
+	)
+	if err != nil {
+		return nil, err
 	}
 
-	// Attempt to locate the user.
-	user, err := s.userService.GetByPiUID(ctx, req.PiUID)
+	//----------------------------------------------------------
+	// Find local user
+	//----------------------------------------------------------
+
+	user, err := s.userService.GetByPiUID(
+		ctx,
+		piUser.UID,
+	)
+
 	if err != nil {
 
-		// User not found.
-		// Create a new local account.
 		appErr, ok := err.(*sharedErrors.AppError)
+
 		if !ok || appErr.Code != sharedErrors.CodeNotFound {
 			return nil, err
 		}
 
+		//------------------------------------------------------
+		// First Login
+		//------------------------------------------------------
+
 		user = &entity.User{
-			PiUID:       req.PiUID,
-			PiUsername:  req.PiUsername,
-			DisplayName: req.PiUsername,
+			PiUID:       piUser.UID,
+			PiUsername:  piUser.Username,
+			DisplayName: piUser.Username,
 		}
 
-		if err := s.userService.Create(ctx, user); err != nil {
+		if err := s.userService.Create(
+			ctx,
+			user,
+		); err != nil {
 			return nil, err
 		}
 
-		// Reload the user so we have the generated fields.
-		user, err = s.userService.GetByPiUID(ctx, req.PiUID)
+		user, err = s.userService.GetByPiUID(
+			ctx,
+			piUser.UID,
+		)
+
 		if err != nil {
 			return nil, err
 		}
+
+		//------------------------------------------------------
+		// Wallet creation comes here in next step
+		//------------------------------------------------------
 	}
+
+	//----------------------------------------------------------
+	// Generate JWT
+	//----------------------------------------------------------
 
 	accessToken, err := s.jwtManager.GenerateAccessToken(
 		user.ID,
@@ -103,24 +128,28 @@ func (s *service) Login(
 		return nil, err
 	}
 
-	refreshToken, err := s.jwtManager.GenerateRefreshToken(user.ID)
+	refreshToken, err := s.jwtManager.GenerateRefreshToken(
+		user.ID,
+	)
 	if err != nil {
 		return nil, err
 	}
 
-	response := &authdto.LoginResponse{
+	return &authdto.LoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		TokenType:    "Bearer",
-		ExpiresAt:    time.Now().Add(s.jwtManager.AccessTokenDuration()),
-		User:         toUserResponse(user),
-	}
-
-	return response, nil
+		ExpiresAt: time.Now().Add(
+			s.jwtManager.AccessTokenDuration(),
+		),
+		User: toUserResponse(user),
+	}, nil
 }
 
-// toUserResponse converts a User entity into its public DTO.
-func toUserResponse(user *entity.User) userdto.UserResponse {
+func toUserResponse(
+	user *entity.User,
+) userdto.UserResponse {
+
 	return userdto.UserResponse{
 		ID:          user.ID,
 		PiUID:       user.PiUID,
