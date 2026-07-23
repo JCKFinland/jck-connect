@@ -27,19 +27,17 @@ type service struct {
 }
 
 func New(
-    userService userservice.Service,
-    jwtManager *jwt.Manager,
-    verifier pi.Verifier,
+	userService userservice.Service,
+	jwtManager *jwt.Manager,
+	verifier pi.Verifier,
 ) Service {
 
-    return &service{
-        userService: userService,
-        jwtManager:  jwtManager,
-        verifier:    verifier,
-    }
+	return &service{
+		userService: userService,
+		jwtManager:  jwtManager,
+		verifier:    verifier,
+	}
 }
-
-
 
 func (s *service) Login(
 	ctx context.Context,

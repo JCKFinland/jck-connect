@@ -69,7 +69,7 @@ func Load() *Config {
 			"PI_API_KEY",
 			"",
 		),
-		
+
 		PiBaseURL: getEnv(
 			"PI_BASE_URL",
 			"https://api.minepi.com",

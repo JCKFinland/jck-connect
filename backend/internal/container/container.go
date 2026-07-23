@@ -1,9 +1,9 @@
 package container
 
 import (
-	"time"
 	"github.com/JCKFinland/jck-connect/backend/internal/config"
 	"github.com/JCKFinland/jck-connect/backend/pkg/database"
+	"time"
 
 	//--------------------------------------------------
 	// Auth
