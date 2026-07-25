@@ -3,15 +3,13 @@ package postgres
 import (
 	"context"
 
-	"github.com/google/uuid"
-
 	transactionentity "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/entity"
 )
 
 // ListByWallet returns all transactions belonging to a wallet.
 func (r *repository) ListByWallet(
 	ctx context.Context,
-	walletID uuid.UUID,
+	walletID string,
 ) ([]*transactionentity.Transaction, error) {
 
 	const query = `

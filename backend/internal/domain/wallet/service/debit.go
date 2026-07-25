@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 
 	walletentity "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
@@ -13,7 +12,7 @@ import (
 
 func (s *service) Debit(
 	ctx context.Context,
-	userID uuid.UUID,
+	userID string,
 	amount decimal.Decimal,
 ) (*walletentity.Wallet, error) {
 

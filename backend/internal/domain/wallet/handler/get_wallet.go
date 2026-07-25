@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 
 	walletmapper "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/mapper"
 
@@ -27,20 +26,9 @@ func (h *Handler) GetWallet(
 		return
 	}
 
-	userUUID, err := uuid.Parse(userID)
-	if err != nil {
-		response.BadRequest(
-			c,
-			sharedErrors.CodeBadRequest,
-			sharedErrors.MsgBadRequest,
-			"",
-		)
-		return
-	}
-
 	wallet, err := h.service.GetByUserID(
 		c.Request.Context(),
-		userUUID,
+		userID,
 	)
 	if err != nil {
 		response.FromError(c, err)

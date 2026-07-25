@@ -3,13 +3,12 @@ package entity
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
 type Wallet struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
+	ID        string
+	UserID    string
 	Balance   decimal.Decimal
 	Currency  string
 	CreatedAt time.Time

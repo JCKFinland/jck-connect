@@ -33,7 +33,7 @@ const (
 type Transaction struct {
 	ID uuid.UUID
 
-	WalletID uuid.UUID
+	WalletID string
 
 	OrderID uuid.UUID
 

@@ -3,8 +3,6 @@ package integration
 import (
 	"context"
 	"testing"
-
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/require"
 )
@@ -17,12 +15,9 @@ func CreditWallet(
 ) {
 	t.Helper()
 
-	userUUID, err := uuid.Parse(userID)
-	require.NoError(t, err)
-
-	err = app.Container.WalletService.Credit(
+	err := app.Container.WalletService.Credit(
 		context.Background(),
-		userUUID,
+		userID,
 		amount,
 	)
 

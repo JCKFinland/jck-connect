@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
 	walletentity "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
@@ -14,7 +13,7 @@ import (
 func CreateWallet(
 	t *testing.T,
 	repo walletrepo.Repository,
-	userID uuid.UUID,
+	userID string,
 ) *walletentity.Wallet {
 
 	t.Helper()

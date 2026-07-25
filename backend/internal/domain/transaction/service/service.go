@@ -3,8 +3,6 @@ package service
 import (
 	"context"
 
-	"github.com/google/uuid"
-
 	transactionentity "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/entity"
 	transactionrepo "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/repository"
 )
@@ -18,7 +16,7 @@ type Service interface {
 
 	GetByID(
 		ctx context.Context,
-		id uuid.UUID,
+		id string,
 	) (*transactionentity.Transaction, error)
 
 	GetByReference(
@@ -28,7 +26,7 @@ type Service interface {
 
 	ListByWallet(
 		ctx context.Context,
-		walletID uuid.UUID,
+		walletID string,
 	) ([]*transactionentity.Transaction, error)
 }
 

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 
 	transactionmapper "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/mapper"
 
@@ -15,15 +14,13 @@ func (h *Handler) GetByID(
 	c *gin.Context,
 ) {
 
-	id, err := uuid.Parse(
-		c.Param("id"),
-	)
-	if err != nil {
+	id := c.Param("id")
+	if id == "" {
 		response.BadRequest(
 			c,
 			sharedErrors.CodeBadRequest,
 			sharedErrors.MsgBadRequest,
-			"invalid transaction id",
+			"transaction id is required",
 		)
 		return
 	}

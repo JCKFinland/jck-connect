@@ -69,7 +69,7 @@ func (s *service) Purchase(
 
 			wallet, err := txServices.walletService.GetByUserID(
 				ctx,
-				request.UserID,
+				request.UserID.String(),
 			)
 			if err != nil {
 				return err
@@ -85,7 +85,7 @@ func (s *service) Purchase(
 
 			hasBalance, err := txServices.walletService.HasSufficientBalance(
 				ctx,
-				request.UserID,
+				request.UserID.String(),
 				product.Price,
 			)
 			if err != nil {
@@ -122,7 +122,7 @@ func (s *service) Purchase(
 
 			wallet, err = txServices.walletService.Debit(
 				ctx,
-				request.UserID,
+				request.UserID.String(),
 				product.Price,
 			)
 			if err != nil {

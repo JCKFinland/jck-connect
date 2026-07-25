@@ -3,8 +3,6 @@ package repository
 import (
 	"context"
 
-	"github.com/google/uuid"
-
 	transactionentity "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/entity"
 )
 
@@ -20,7 +18,7 @@ type Repository interface {
 	// GetByID returns a transaction by its ID.
 	GetByID(
 		ctx context.Context,
-		id uuid.UUID,
+		id string,
 	) (*transactionentity.Transaction, error)
 
 	// GetByReference returns a transaction by its business reference.
@@ -32,6 +30,6 @@ type Repository interface {
 	// ListByWallet returns all transactions belonging to a wallet.
 	ListByWallet(
 		ctx context.Context,
-		walletID uuid.UUID,
+		WalletID string,
 	) ([]*transactionentity.Transaction, error)
 }

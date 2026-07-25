@@ -13,6 +13,6 @@ func RegisterRoutes(
 ) {
 	auth := router.Group("/auth")
 	{
-		auth.POST("/login", handler.Login)
+		auth.POST("/pi-login", handler.PiLogin)
 	}
 }

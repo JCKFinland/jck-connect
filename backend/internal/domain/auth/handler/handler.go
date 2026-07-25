@@ -21,10 +21,11 @@ func New(
 	}
 }
 
-// Login authenticates a Pi user.
+// Login authenticates a Pi user using a Pi access token.
 //
-// POST /api/v1/auth/login
-func (h *Handler) Login(c *gin.Context) {
+// POST /api/v1/auth/pi-login
+
+func (h *Handler) PiLogin(c *gin.Context) {
 	var req authdto.LoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {

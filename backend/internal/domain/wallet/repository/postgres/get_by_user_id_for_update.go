@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 
 	"github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
@@ -11,7 +10,7 @@ import (
 
 func (r *repository) GetByUserIDForUpdate(
 	ctx context.Context,
-	userID uuid.UUID,
+	userID string,
 ) (*entity.Wallet, error) {
 
 	var wallet entity.Wallet

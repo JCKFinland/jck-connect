@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 
 	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
@@ -11,7 +10,7 @@ import (
 
 func (s *service) Credit(
 	ctx context.Context,
-	userID uuid.UUID,
+	userID string,
 	amount decimal.Decimal,
 ) error {
 

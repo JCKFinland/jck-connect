@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 
 	walletentity "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
@@ -13,24 +12,24 @@ import (
 type Service interface {
 	GetByUserID(
 		ctx context.Context,
-		userID uuid.UUID,
+		userID string,
 	) (*walletentity.Wallet, error)
 
 	Credit(
 		ctx context.Context,
-		userID uuid.UUID,
+		userID string,
 		amount decimal.Decimal,
 	) error
 
 	Debit(
 		ctx context.Context,
-		userID uuid.UUID,
+		userID string,
 		amount decimal.Decimal,
 	) (*walletentity.Wallet, error)
 
 	HasSufficientBalance(
 		ctx context.Context,
-		userID uuid.UUID,
+		userID string,
 		amount decimal.Decimal,
 	) (bool, error)
 }

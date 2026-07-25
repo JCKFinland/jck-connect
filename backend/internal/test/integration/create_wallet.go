@@ -3,8 +3,6 @@ package integration
 import (
 	"context"
 	"testing"
-
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
 	walletentity "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
@@ -19,12 +17,6 @@ func CreateWallet(
 
 	t.Helper()
 
-	//--------------------------------------------------
-	// Convert User ID
-	//--------------------------------------------------
-
-	userUUID, err := uuid.Parse(userID)
-	require.NoError(t, err)
 
 	//--------------------------------------------------
 	// Build wallet
@@ -32,18 +24,18 @@ func CreateWallet(
 
 	wallet := fixture.Wallet(
 		t,
-		userUUID,
+		userID,
 	)
 
 	//--------------------------------------------------
 	// Persist
 	//--------------------------------------------------
 
-	err = app.Container.WalletRepository.Create(
+	err := app.Container.WalletRepository.Create(
 		context.Background(),
 		wallet,
 	)
-
+	
 	require.NoError(t, err)
 
 	return wallet

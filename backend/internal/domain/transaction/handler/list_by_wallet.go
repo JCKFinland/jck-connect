@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 
 	transactionmapper "github.com/JCKFinland/jck-connect/backend/internal/domain/transaction/mapper"
 
@@ -15,15 +14,13 @@ func (h *Handler) ListByWallet(
 	c *gin.Context,
 ) {
 
-	walletID, err := uuid.Parse(
-		c.Param("walletId"),
-	)
-	if err != nil {
+	walletID := c.Param("walletId")
+	if walletID == "" {
 		response.BadRequest(
 			c,
 			sharedErrors.CodeBadRequest,
 			sharedErrors.MsgBadRequest,
-			"invalid wallet id",
+			"wallet id is required",
 		)
 		return
 	}

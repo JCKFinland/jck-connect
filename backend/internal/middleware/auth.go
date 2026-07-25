@@ -13,7 +13,7 @@ import (
 const (
 	ContextUserID   = "user_id"
 	ContextPiUID    = "pi_uid"
-	ContextUsername = "username"
+	ContextPiUsername = "pi_username"
 	ContextRole     = "role"
 )
 
@@ -65,7 +65,7 @@ func Auth(
 
 		c.Set(ContextUserID, claims.UserID)
 		c.Set(ContextPiUID, claims.PiUID)
-		c.Set(ContextUsername, claims.Username)
+		c.Set(ContextPiUsername, claims.Username)
 		c.Set(ContextRole, claims.Role)
 
 		c.Next()
@@ -103,8 +103,8 @@ func PiUID(c *gin.Context) string {
 }
 
 // Username returns the authenticated user's Pi username.
-func Username(c *gin.Context) string {
-	value, ok := c.Get(ContextUsername)
+func PiUsername(c *gin.Context) string {
+	value, ok := c.Get(ContextPiUsername)
 	if !ok {
 		return ""
 	}

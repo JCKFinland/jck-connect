@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 
-	"github.com/google/uuid"
 
 	walletentity "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
 	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
@@ -11,7 +10,7 @@ import (
 
 func (s *service) GetByUserID(
 	ctx context.Context,
-	userID uuid.UUID,
+	userID string,
 ) (*walletentity.Wallet, error) {
 
 	wallet, err := s.repository.GetByUserID(

@@ -17,7 +17,7 @@ func ToResponse(
 	return &transactiondto.TransactionResponse{
 		ID:            transaction.ID.String(),
 		OrderID:       transaction.OrderID.String(),
-		WalletID:      transaction.WalletID.String(),
+		WalletID:      transaction.WalletID,
 		Type:          string(transaction.Type),
 		Status:        string(transaction.Status),
 		Amount:        transaction.Amount.String(),
