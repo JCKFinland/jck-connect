@@ -11,10 +11,10 @@ import (
 )
 
 const (
-	ContextUserID   = "user_id"
-	ContextPiUID    = "pi_uid"
+	ContextUserID     = "user_id"
+	ContextPiUID      = "pi_uid"
 	ContextPiUsername = "pi_username"
-	ContextRole     = "role"
+	ContextRole       = "role"
 )
 
 // Auth validates JWT access tokens.

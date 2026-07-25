@@ -2,8 +2,8 @@ package integration
 
 import (
 	"context"
-	"testing"
 	"github.com/stretchr/testify/require"
+	"testing"
 
 	walletentity "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
 	"github.com/JCKFinland/jck-connect/backend/internal/test/fixture"
@@ -16,7 +16,6 @@ func CreateWallet(
 ) *walletentity.Wallet {
 
 	t.Helper()
-
 
 	//--------------------------------------------------
 	// Build wallet
@@ -35,7 +34,7 @@ func CreateWallet(
 		context.Background(),
 		wallet,
 	)
-	
+
 	require.NoError(t, err)
 
 	return wallet

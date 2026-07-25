@@ -2,9 +2,9 @@ package integration
 
 import (
 	"context"
-	"testing"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func CreditWallet(

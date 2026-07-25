@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 
-
 	walletentity "github.com/JCKFinland/jck-connect/backend/internal/domain/wallet/entity"
 	sharedErrors "github.com/JCKFinland/jck-connect/backend/internal/shared/errors"
 )
